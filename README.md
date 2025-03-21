@@ -30,6 +30,7 @@ jobs:
 | Name                          | Default    | Description                                                 |
 | ----------------------------- | ---------- | ----------------------------------------------------------- |
 | `user-prompt`                 | (required) | User prompt message                                         |
+| `user-prompt-files`           | -          | Glob patterns of files to append to the user prompt         |
 | `system-prompt`               | -          | System prompt message                                       |
 | `model-id`                    | (required) | Model ID                                                    |
 | `inference-config-max-tokens` | -          | Maximum number of tokens to allow in the generated response |

@@ -5,6 +5,9 @@ inputs:
   user-prompt:
     description: User prompt message
     required: true
+  user-prompt-files:
+    description: Glob patterns of files to append to the user prompt
+    required: false
   system-prompt:
     description: System prompt message
     required: false

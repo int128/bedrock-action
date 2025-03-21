@@ -36,32 +36,25 @@ jobs:
       - run: pnpm build
 
       - if: github.event_name == 'pull_request'
-        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
-        id: diff
+        run: |
+          gh pr diff '${{ github.event.pull_request.number }}' --color=never > diff.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          result-encoding: string
-          script: |
-            const { stdout } = await exec.getExecOutput('gh', ['pr', 'diff', '${{ github.event.pull_request.number }}', '--color=never'])
-            return stdout
-      - if: steps.diff.outputs.result != ''
+      - if: github.event_name == 'pull_request'
         uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           aws-region: us-west-2
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE_NAME }}
-      - if: steps.diff.outputs.result != ''
+      - if: github.event_name == 'pull_request'
         name: Use int128/bedrock-action
         id: bedrock
         uses: ./
         with:
           model-id: us.amazon.nova-lite-v1:0
           user-prompt: |
-            Summarize the following code changes in a single sentence.
-
-            ```diff
-            ${{ steps.diff.outputs.result }}
-            ```
+            Summarize the following diff in a single sentence.
+          user-prompt-files: |
+            diff.txt
       - run: echo "$OUTPUT_TEXT"
         env:
           OUTPUT_TEXT: ${{ steps.bedrock.outputs.text }}
