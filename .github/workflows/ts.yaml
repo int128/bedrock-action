@@ -36,17 +36,19 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
-      - if: github.event_name == 'pull_request'
+      # E2E test
+      - if: github.event_name == 'pull_request' && github.actor == github.repository_owner
+        id: diff
         run: |
           gh pr diff '${{ github.event.pull_request.number }}' --color=never > diff.txt
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - if: github.event_name == 'pull_request'
+      - if: steps.diff.conclusion == 'success'
         uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
         with:
           aws-region: us-west-2
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE_NAME }}
-      - if: github.event_name == 'pull_request'
+      - if: steps.diff.conclusion == 'success'
         name: Use int128/bedrock-action
         id: bedrock
         uses: ./
@@ -56,7 +58,7 @@ jobs:
             Summarize the following diff in a single sentence.
           user-prompt-files: |
             diff.txt
-      - if: github.event_name == 'pull_request'
+      - if: steps.diff.conclusion == 'success'
         uses: int128/comment-action@a20dbdebd79ab886a1e7a20d16bfa7dbaa732e5a # v1.33.0
         with:
           post: |
