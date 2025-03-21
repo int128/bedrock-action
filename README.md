@@ -17,7 +17,7 @@ jobs:
           role-to-assume: arn:aws:iam::0123456789012:role/your-iam-role
       - uses: int128/bedrock-action@v0
         with:
-          model-id: amazon.nova-lite-v1:0
+          model-id: us.amazon.nova-lite-v1:0
           user-prompt: |
             Hello world!
 ```

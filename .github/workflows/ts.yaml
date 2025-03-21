@@ -37,13 +37,13 @@ jobs:
 
       - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         with:
-          aws-region: ${{ secrets.AWS_REGION }}
+          aws-region: us-west-2
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE_NAME }}
       - name: Use int128/bedrock-action
         id: bedrock
         uses: ./
         with:
-          model-id: amazon.nova-lite-v1:0
+          model-id: us.amazon.nova-lite-v1:0
           user-prompt: |
             Hello world!
       - run: echo "$OUTPUT_TEXT"
