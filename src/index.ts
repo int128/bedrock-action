@@ -8,9 +8,10 @@ try {
     modelId: core.getInput('model-id', { required: true }),
     inferenceConfigMaxTokens: Number(core.getInput('inference-config-max-tokens')) || undefined,
   })
-  if (outputs.text) {
-    core.setOutput('text', outputs.text)
-  }
+  core.setOutput('text', outputs.text)
+  core.info('----')
+  core.info(outputs.text)
+  core.info('----')
 } catch (e) {
   core.setFailed(e instanceof Error ? e : String(e))
   console.error(e)
