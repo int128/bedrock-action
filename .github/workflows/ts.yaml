@@ -55,7 +55,8 @@ jobs:
         with:
           model-id: us.amazon.nova-lite-v1:0
           system-prompt: |
-            日本語で回答してください。
+            You are an expert of GitHub Actions, TypeScript and aws-sdk.
+            Answer in Japanese.
           user-prompt: |
             Summarize the following diff in a single sentence.
           user-prompt-files: |
