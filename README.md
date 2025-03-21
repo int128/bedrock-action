@@ -1,6 +1,7 @@
 # bedrock-action [![ts](https://github.com/int128/bedrock-action/actions/workflows/ts.yaml/badge.svg)](https://github.com/int128/bedrock-action/actions/workflows/ts.yaml)
 
-This is a template of TypeScript action.
+This is a general-purpose action for conversation with Amazon Bedrock in GitHub Actions.
+It uses the [Amazon Bedrock API](https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html) to send a user prompt and receive a response.
 
 ## Getting Started
 

@@ -1,5 +1,6 @@
+import assert from 'assert'
 import * as core from '@actions/core'
-import { BedrockRuntimeClient, ConverseCommand, ConverseCommandInput } from '@aws-sdk/client-bedrock-runtime'
+import * as bedrock from '@aws-sdk/client-bedrock-runtime'
 
 type Inputs = {
   userPrompt: string
@@ -9,11 +10,26 @@ type Inputs = {
 }
 
 type Outputs = {
-  text: string | undefined
+  text: string
 }
 
 export const run = async (inputs: Inputs): Promise<Outputs> => {
-  const converseInput: ConverseCommandInput = {
+  const converseInput = getConverseInput(inputs)
+
+  core.startGroup('ConverseInput')
+  core.info(JSON.stringify(converseInput, null, 2))
+  core.endGroup()
+  const bedrockClient = new bedrock.BedrockRuntimeClient()
+  const converseOutput = await bedrockClient.send(new bedrock.ConverseCommand(converseInput))
+  core.startGroup('ConverseOutput')
+  core.info(JSON.stringify(converseOutput, null, 2))
+  core.endGroup()
+
+  return getActionOutputs(converseOutput)
+}
+
+const getConverseInput = (inputs: Inputs): bedrock.ConverseCommandInput => {
+  return {
     messages: [
       {
         role: 'user',
@@ -26,25 +42,19 @@ export const run = async (inputs: Inputs): Promise<Outputs> => {
       maxTokens: inputs.inferenceConfigMaxTokens,
     },
   }
+}
 
-  core.startGroup('ConverseInput')
-  core.info(JSON.stringify(converseInput, null, 2))
-  core.endGroup()
-  const bedrockClient = new BedrockRuntimeClient()
-  const converseOutput = await bedrockClient.send(new ConverseCommand(converseInput))
-  core.startGroup('ConverseOutput')
-  core.info(JSON.stringify(converseOutput, null, 2))
-  core.endGroup()
+const getActionOutputs = (converseOutput: bedrock.ConverseCommandOutput): Outputs => {
+  assert(converseOutput.output)
+  assert(converseOutput.output.message)
+  assert(converseOutput.output.message.content)
+  assert(converseOutput.output.message.role)
 
-  const text = converseOutput.output?.message?.content
-    ?.map((content) => content.text)
-    .filter((text) => text)
+  const text = converseOutput.output.message.content
+    .filter((content) => content.text !== undefined)
+    .map((content) => content.text)
     .join('\n')
-  if (text) {
-    core.info('----')
-    core.info(text)
-    core.info('----')
-  }
+
   return {
     text,
   }
