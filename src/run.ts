@@ -40,7 +40,11 @@ export const run = async (inputs: Inputs): Promise<Outputs> => {
     ?.map((content) => content.text)
     .filter((text) => text)
     .join('\n')
-  core.info(`Text: ${text}`)
+  if (text) {
+    core.info('----')
+    core.info(text)
+    core.info('----')
+  }
   return {
     text,
   }

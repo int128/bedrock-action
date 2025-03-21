@@ -35,11 +35,13 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
-      - uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+      - if: github.event.sender.type == 'User'
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
         with:
           aws-region: us-west-2
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE_NAME }}
-      - name: Use int128/bedrock-action
+      - if: github.event.sender.type == 'User'
+        name: Use int128/bedrock-action
         id: bedrock
         uses: ./
         with:
