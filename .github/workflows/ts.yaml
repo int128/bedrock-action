@@ -22,6 +22,9 @@ jobs:
   test:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
@@ -32,10 +35,22 @@ jobs:
       - run: pnpm test
       - run: pnpm build
 
-      - name: e2e-test
+      - if: github.event.sender.type == 'User'
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4.0.2
+        with:
+          aws-region: us-west-2
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/${{ secrets.AWS_IAM_ROLE_NAME }}
+      - if: github.event.sender.type == 'User'
+        name: Use int128/bedrock-action
+        id: bedrock
         uses: ./
         with:
-          name: foo
+          model-id: us.amazon.nova-lite-v1:0
+          user-prompt: |
+            Hello world!
+      - run: echo "$OUTPUT_TEXT"
+        env:
+          OUTPUT_TEXT: ${{ steps.bedrock.outputs.text }}
 
   generate:
     runs-on: ubuntu-latest
