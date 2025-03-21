@@ -54,6 +54,8 @@ jobs:
         uses: ./
         with:
           model-id: us.amazon.nova-lite-v1:0
+          system-prompt: |
+            日本語で回答してください。
           user-prompt: |
             Summarize the following diff in a single sentence.
           user-prompt-files: |
