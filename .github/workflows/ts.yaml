@@ -55,9 +55,12 @@ jobs:
             Summarize the following diff in a single sentence.
           user-prompt-files: |
             diff.txt
-      - run: echo "$OUTPUT_TEXT"
-        env:
-          OUTPUT_TEXT: ${{ steps.bedrock.outputs.text }}
+      - if: github.event_name == 'pull_request'
+        uses: int128/comment-action@a20dbdebd79ab886a1e7a20d16bfa7dbaa732e5a # v1.33.0
+        with:
+          post: |
+            ## :robot: Summary
+            ${{ steps.bedrock.outputs.text }}
 
   generate:
     runs-on: ubuntu-latest
