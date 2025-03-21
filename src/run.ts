@@ -1,9 +1,12 @@
 import assert from 'assert'
 import * as core from '@actions/core'
+import * as fs from 'fs/promises'
+import * as glob from '@actions/glob'
 import * as bedrock from '@aws-sdk/client-bedrock-runtime'
 
 type Inputs = {
   userPrompt: string
+  userPromptFiles: string
   systemPrompt: string | undefined
   modelId: string
   inferenceConfigMaxTokens: number | undefined
@@ -14,7 +17,7 @@ type Outputs = {
 }
 
 export const run = async (inputs: Inputs): Promise<Outputs> => {
-  const converseInput = getConverseInput(inputs)
+  const converseInput = await getConverseInput(inputs)
 
   core.startGroup('ConverseInput')
   core.info(JSON.stringify(converseInput, null, 2))
@@ -28,12 +31,21 @@ export const run = async (inputs: Inputs): Promise<Outputs> => {
   return getActionOutputs(converseOutput)
 }
 
-const getConverseInput = (inputs: Inputs): bedrock.ConverseCommandInput => {
+const getConverseInput = async (inputs: Inputs): Promise<bedrock.ConverseCommandInput> => {
+  const userContent: bedrock.ContentBlock[] = [{ text: inputs.userPrompt }]
+
+  for await (const userPromptFile of (
+    await glob.create(inputs.userPromptFiles, { matchDirectories: false })
+  ).globGenerator()) {
+    const userPromptFileContent = await fs.readFile(userPromptFile, 'utf-8')
+    userContent.push({ text: userPromptFileContent })
+  }
+
   return {
     messages: [
       {
         role: 'user',
-        content: [{ text: inputs.userPrompt }],
+        content: userContent,
       },
     ],
     system: inputs.systemPrompt ? [{ text: inputs.systemPrompt }] : undefined,
