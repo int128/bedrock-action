@@ -1,10 +1,19 @@
-name: typescript-action
-description: Template of TypeScript Action
+name: bedrock-action
+description: Conversation with Amazon Bedrock in GitHub Actions
 
 inputs:
-  name:
-    description: example input
+  user-prompt:
+    description: User prompt message
     required: true
+  system-prompt:
+    description: System prompt message
+    required: false
+  model-id:
+    description: Model ID
+    required: true
+  inference-config-max-tokens:
+    description: Maximum number of tokens to allow in the generated response
+    required: false
 
 runs:
   using: 'node20'
