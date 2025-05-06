@@ -10,7 +10,7 @@
   "dependencies": {
     "@actions/core": "1.11.1",
     "@actions/glob": "0.5.0",
-    "@aws-sdk/client-bedrock-runtime": "3.799.0"
+    "@aws-sdk/client-bedrock-runtime": "3.803.0"
   },
   "devDependencies": {
     "@eslint/js": "9.26.0",
