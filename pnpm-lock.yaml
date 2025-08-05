@@ -15,8 +15,8 @@ importers:
         specifier: 0.5.0
         version: 0.5.0
       '@aws-sdk/client-bedrock-runtime':
-        specifier: 3.859.0
-        version: 3.859.0
+        specifier: 3.861.0
+        version: 3.861.0
     devDependencies:
       '@eslint/js':
         specifier: 9.32.0
@@ -90,8 +90,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-bedrock-runtime@3.859.0':
-    resolution: {integrity: sha512-L2Mf4ubfTrtOydxP5GDRYK0oNz55fGNnevH2aJZ9be8Dd0XGi2Irh1JMqmQnbqoRwmGZrNhV1nl9FTUzgWt3Vg==}
+  '@aws-sdk/client-bedrock-runtime@3.861.0':
+    resolution: {integrity: sha512-98gAq/aS8nXj4RqYhPEMVt3I5ninXciBvlVPvPe0vSRnLNDlv18qBa/NsuNpIFym6GuWUtgV7ePAnMOd3Nz6KQ==}
     engines: {node: '>=18.0.0'}
 
   '@aws-sdk/client-sso@3.858.0':
@@ -1538,7 +1538,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-bedrock-runtime@3.859.0':
+  '@aws-sdk/client-bedrock-runtime@3.861.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
